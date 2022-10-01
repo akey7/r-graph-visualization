@@ -159,3 +159,61 @@ plot(net.bg, layout=l)
 l <- layout_on_sphere(net.bg)
 plot(net.bg, layout=l)
 ```
+
+```{r}
+l <- layout_with_fr(net.bg)
+plot(net.bg, layout=l)
+```
+
+```{r}
+l <- layout_with_fr(net.bg, niter=50)
+plot(net.bg, layout=l)
+```
+
+```{r}
+ws  <-  c(1, rep(100, ecount(net.bg)-1))
+lw <- layout_with_fr(net.bg, weights=ws)
+plot(net.bg, layout=lw) 
+```
+
+```{r}
+library(ggplot2)
+library(ggraph)
+```
+
+```{r}
+net %>%
+  ggraph(layout = "lgl") +
+  geom_node_point() +
+  geom_edge_arc() +
+  labs(title = "No nodes")
+```
+
+```{r}
+ggraph(net, layout="lgl") +
+  geom_edge_fan(color="gray50", width=0.8, alpha=0.5) + 
+  geom_node_point(color=V(net)$color, size=8) +
+  theme_void()
+```
+
+```{r}
+ggraph(net, layout = 'linear') + 
+    geom_edge_arc(color = "orange", width=0.7) +
+    geom_node_point(size=5, color="gray50") +
+    theme_void()
+```
+
+```{r}
+ggraph(net, layout="lgl") +
+  geom_edge_link(aes(color = type)) +           # colors by edge type 
+  geom_node_point(aes(size = audience.size)) +  # size by audience size  
+  theme_void()
+```
+
+```{r}
+ggraph(net,  layout = 'lgl') +
+  geom_edge_arc(color="gray", strength=0.3) +            
+  geom_node_point(color="orange", aes(size = audience.size)) +     
+  geom_node_text(aes(label = media), size=3, color="gray50", repel=T) +
+  theme_void()
+```
