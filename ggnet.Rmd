@@ -1,0 +1,109 @@
+---
+title: "Graph Viz Tests"
+output: html_document
+date: "2022-10-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(magrittr)
+library(network)
+library(sna)
+library(ggplot2)
+library(ggnet)
+```
+
+Let's make a graph!
+
+```{r}
+set.seed(123)
+
+net <- rgraph(10, mode = "graph", tprob = 0.5) %>%
+  network(directed = FALSE)
+```
+
+Let's draw a graph
+
+```{r}
+ggnet2(net, node.size = 6, node.color = "black", edge.size = 1, edge.color = "gray")
+```
+
+Let's add some color
+
+```{r}
+node_colors <- rep(c("tomato", "steelblue"), 5)
+
+net %>%
+  ggnet2(node.size = 6, node.color = node_colors)
+```
+
+Change the layout of the nodes
+
+```{r}
+net %>%
+  ggnet2(mode = "circle")
+```
+
+```{r}
+net %>%
+  ggnet2(mode = "kamadakawai")
+```
+
+```{r}
+ggnet2(net, mode = "fruchtermanreingold", layout.par = list(cell.jitter = 0.75))
+```
+
+```{r}
+net %v% "phono" <- ifelse(letters[1:10] %in% c("a", "e", "i"), "vowel", "consonant")
+ggnet2(net, color = "phono")
+```
+
+```{r}
+net %v% "phono"
+```
+
+```{r}
+ggnet2(net, node.color = "phono")
+```
+
+```{r}
+net %v% "color" = ifelse(net %v% "phono" == "vowel", "steelblue", "tomato")
+ggnet2(net, color = "color")
+```
+
+```{r}
+ggnet2(net, color = "phono", palette = c("vowel" = "steelblue", "consonant" = "tomato"))
+```
+
+```{r}
+ggnet2(net, color = "phono", palette = "Set2")
+```
+
+```{r}
+sizes <- sample(0:2, 10, replace = TRUE)
+ggnet2(net, size = sizes, max_size = 9)
+```
+
+```{r}
+ggnet2(net, size = "degree", size.legend = "Centrality")
+```
+
+```{r}
+# control the colors of the nodes
+ggnet2(net, color = "phono") +
+  scale_color_brewer("", palette = "Set1",
+                     labels = c("consonant" = "C", "vowel" = "V"),
+                     guide = guide_legend(override.aes = list(size = 6)))
+
+# control the size of the nodes
+ggnet2(net, size = "degree") +
+  scale_size_discrete("", range = c(5, 10), breaks = seq(10, 2, -2))
+```
+
+```{r}
+ggnet2(net, color = "phono", legend.size = 12, legend.position = "bottom")
+```
