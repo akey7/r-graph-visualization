@@ -43,3 +43,7 @@ vignettes/*.pdf
 
 # macOS stuff
 .DS_Store
+
+# Data I am using to make the graphs
+data/
+
